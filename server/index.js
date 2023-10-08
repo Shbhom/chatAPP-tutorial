@@ -1,7 +1,20 @@
-import { createServer } from "http"
+import express from "express"
 import { Server } from "socket.io"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const httpServer = createServer()
+const __fileName = fileURLToPath(import.meta.url)
+const __dirName =path.dirname(__fileName)
+
+const app = express()
+const port = process.env.PORT || 3500
+
+
+const httpServer = app.listen(port, () => {
+    console.log(`app is running on port :${port}`)
+})
+
+app.use(express.static(path.join(__dirName, "public")))
 
 const io = new Server(httpServer, {
     cors: {
@@ -17,6 +30,3 @@ io.on("connection", socket => {
     })
 })
 
-httpServer.listen(3500, () => {
-    console.log(`listening of port 3500 `)
-})
